@@ -1,17 +1,43 @@
 import { FcLikePlaceholder } from 'react-icons/fc';
 import PropTypes from 'prop-types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import blogService from '../services/blogs';
+import useNotification from '../hooks/useNotification';
 
-const BlogDetails = ({ blog, likeBlog, removeBlog, isRemovable }) => {
-  const like = () => {
+const BlogDetails = ({ blog, isRemovable }) => {
+  const queryClient = useQueryClient();
+  const { setNotification } = useNotification();
+
+  const updatedBlogMutation = useMutation({
+    mutationFn: (blogObj) => blogService.updateBlog(blogObj),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] });
+    }
+  });
+
+  const deletedBlogMutation = useMutation({
+    mutationFn: (id) => blogService.deleteBlog(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] });
+      setNotification('Blog removed successfully', 'success');
+    },
+    onError: (error) => {
+      console.error(error);
+      setNotification('error removing blog', 'error');
+    }
+  });
+
+  const likeBlog = () => {
     const likedBlog = {
       ...blog,
       likes: blog.likes + 1,
     };
-    likeBlog(likedBlog);
+    updatedBlogMutation.mutate(likedBlog);
   };
 
-  const onRemoveBlog = () => {
-    removeBlog(blog.id);
+  const onRemoveBlog = (id, title) => {
+    if (window.confirm(`remove blog ${title}?`))
+      deletedBlogMutation.mutate(id);
   };
 
   return (
@@ -23,18 +49,16 @@ const BlogDetails = ({ blog, likeBlog, removeBlog, isRemovable }) => {
         <FcLikePlaceholder
           style={{ cursor: 'pointer' }}
           aria-label="like button"
-          onClick={like}
+          onClick={likeBlog}
         />
       </li>
-      {isRemovable && <button onClick={onRemoveBlog}>remove blog</button>}
+      {isRemovable && <button onClick={() => onRemoveBlog(blog.id, blog.title)}>remove blog</button>}
     </ul>
   );
 };
 
 BlogDetails.propTypes = {
   blog: PropTypes.object.isRequired,
-  likeBlog: PropTypes.func.isRequired,
-  removeBlog: PropTypes.func.isRequired,
 };
 
 export default BlogDetails;

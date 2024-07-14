@@ -1,12 +1,33 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import loginService from '../services/login';
+import blogService from '../services/blogs';
+import UserContext from '../context/UserContext';
+import useNotification from '../hooks/useNotification';
 
-const LogInForm = ({ onLogin }) => {
+const LogInForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [, userDispatch] = useContext(UserContext);
+  const { setNotification } = useNotification();
+
+  const loginMutation = useMutation({
+    mutationFn: (user) => loginService.login(user),
+    onSuccess: (user) => {
+      userDispatch({ type: 'SET_USER', payload: user });
+      setNotification('logged in successfully', 'success');
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
+      blogService.setToken(user.token);
+    },
+    onError: (error) => {
+      console.error(error);
+      setNotification('wrong credentials', 'error');
+    }
+  });
 
   const login = (e) => {
     e.preventDefault();
-    onLogin({ username, password });
+    loginMutation.mutate({ username, password });
 
     setUsername('');
     setPassword('');

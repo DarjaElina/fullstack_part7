@@ -1,58 +1,35 @@
-import { useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useRef, useContext } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import blogService from '../services/blogs';
 import Blog from './Blog';
 import Togglable from './Togglable';
 import BlogForm from './BlogForm';
-import Notification from './Notification';
-import {
-  initializeBlogs,
-  addBlog,
-  putLike,
-  removeBlog,
-} from '../reducers/blogReducer';
+import UserContext from '../context/UserContext';
 
-const BlogList = ({ user }) => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(initializeBlogs());
-  }, []);
-
-  const blogNotification = useSelector((state) => state.blogNotification);
-
-  const blogs = useSelector(({ blogs }) => {
-    return [...blogs].sort((a, b) => b.likes - a.likes);
-  });
-
+const BlogList = () => {
+  const [user] = useContext(UserContext);
   const blogFormRef = useRef();
 
-  const addNewBlog = (blogObj) => {
-    blogFormRef.current.toggleVisibility();
-    dispatch(addBlog(blogObj));
-  };
+  const result = useQuery({
+    queryKey: ['blogs'],
+    queryFn: blogService.getAll
+  });
 
-  const handleLike = (updatedBlog) => {
-    dispatch(putLike(updatedBlog));
-  };
+  if (result.isLoading) {
+    return <div>loading data</div>;
+  }
 
-  const handleDeleteBlog = (id) => {
-    const blogToRemove = blogs.find((b) => b.id === id);
-    if (window.confirm(`remove ${blogToRemove.title}?`))
-      dispatch(removeBlog(id));
-  };
+  const blogs = result.data.sort((a, b) => b.likes - a.likes);
 
   return (
     <div>
       <h2>Blogs</h2>
-      <Notification notification={blogNotification} />
       <Togglable buttonLabel="new blog" ref={blogFormRef}>
-        <BlogForm createBlog={addNewBlog} />
+        <BlogForm />
       </Togglable>
       {blogs.map((blog) => (
         <Blog
           isRemovable={blog.user.username === user.username ? true : false}
-          likeBlog={handleLike}
-          removeBlog={handleDeleteBlog}
           key={blog.id}
           blog={blog}
         />

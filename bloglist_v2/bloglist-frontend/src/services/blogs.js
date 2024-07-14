@@ -21,7 +21,8 @@ const create = async (newObject) => {
   return response.data;
 };
 
-const updateBlog = async (id, updatedObj) => {
+const updateBlog = async (updatedObj) => {
+  const id = updatedObj.id;
   const config = {
     headers: { Authorization: token },
   };

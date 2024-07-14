@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import BlogDetails from './BlogDetails';
 
-const Blog = ({ blog, likeBlog, removeBlog, isRemovable }) => {
+const Blog = ({ blog, isRemovable }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const btnText = isVisible ? 'hide' : 'view';
@@ -25,8 +25,6 @@ const Blog = ({ blog, likeBlog, removeBlog, isRemovable }) => {
       {isVisible && (
         <BlogDetails
           isRemovable={isRemovable}
-          removeBlog={removeBlog}
-          likeBlog={likeBlog}
           blog={blog}
         />
       )}
