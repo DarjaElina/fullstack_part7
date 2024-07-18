@@ -15,7 +15,7 @@ const StyledDiv = styled.div`
   border: 1px solid #ffee32;
   display: flex;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: space-around;
   flex-wrap: wrap;
 `;
 
@@ -26,6 +26,11 @@ const StyledLikeWrap = styled.div`
   gap: 0.2em;
 `;
 
+const StyledLink = styled.a`
+   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    font-size: 15px;
+  }
+`;
 
 const Blog = ({ blog }) => {
   const [user] = useContext(UserContext);
@@ -71,7 +76,7 @@ const Blog = ({ blog }) => {
       <div>
         <h2>Blog {blog.title} by {blog.author}</h2>
         <p>Added by {blog.user.name}</p>
-        <a href="/">{blog.url}</a>
+        <StyledLink href="/">{blog.url}</StyledLink>
         <StyledLikeWrap>
           <FcLike style={{ cursor: 'pointer' }}onClick={likeBlog}/>
           <p>{blog.likes}</p>

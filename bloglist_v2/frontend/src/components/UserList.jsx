@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const GridContainer = styled.li`
-  width: 400px;
+  max-width: 400px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: auto auto;
@@ -13,7 +13,7 @@ const GridContainer = styled.li`
 const FlexContainer = styled.div`
   margin: 0 auto;
   display: flex;
-  width: 400px;
+  max-width: 400px;
   justify-content: space-between;
 `;
 

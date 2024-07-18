@@ -32,7 +32,7 @@ const StyledInput = styled.input`
   background-color: transparent;
   border: none;
   border-bottom: 2px solid #ffd100;
-  width: 300px;
+  max-width: 300px;
   color: #F3D9DC;
   padding: 10px;
   &:focus {

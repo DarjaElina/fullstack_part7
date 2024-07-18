@@ -1,4 +1,3 @@
-// GlobalStyles.js
 import { createGlobalStyle } from 'styled-components';
 
 const breakpoints = {
@@ -23,7 +22,6 @@ const GlobalStyle = createGlobalStyle`
   form {
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: space-evenly;
     max-width: 400px;
     min-height: 100px;
@@ -35,7 +33,7 @@ const GlobalStyle = createGlobalStyle`
   input {
      background-color: transparent;
      border: none;
-     width: 300px;
+     max-width: 300px;
      padding: 10px;
   }
 

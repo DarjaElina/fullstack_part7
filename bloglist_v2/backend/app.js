@@ -10,10 +10,6 @@ const logger = require('./utils/logger');
 const middleware = require('./utils/middleware');
 const mongoose = require('mongoose');
 
-// http://localhost:3003/api/users/
-// http://localhost:3003/api/blogs/
-// http://localhost:3003/api/login/
-
 mongoose.set('strictQuery', false);
 
 logger.info('connecting to', config.MONGODB_URI);
