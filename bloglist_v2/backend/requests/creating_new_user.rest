@@ -1,0 +1,14 @@
+POST http://localhost:3003/api/users/
+Content-Type: application/json
+
+{
+  "username": "styles_master",
+  "name": "Inna Yakusheva",
+  "password": "salainen"
+}
+
+# {
+#   "username": "andrei",
+#   "name": "andrei",
+#   "password": "andrei"
+# }
